@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StyleColor from "../components/StyleColor";
-
+import ToolBoard from "../components/ToolBoard";
+import { ReactComponent as Delete } from "../icon/delete.svg"
 declare var window: any;
 
 function Board() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [option, setOtion ] = useState({
+  const [option, setOption] = useState({
     pen: "mouse",
     isDrawing: false,
     color: "black",
-    strokeWidth: 4
-  })
-  const [displayColorTabel, setDisplayColorTable] = useState(false)
+    strokeWidth: 4,
+  });
+  const [displayColorTabel, setDisplayColorTable] = useState(false);
 
   const [canvas, setCanvas] = useState(null);
   const [size, setSize] = useState({
@@ -45,11 +46,13 @@ function Board() {
       };
     }
   }, [socket]);
-  const handleChangeAttribute = (e : any) => {}
-
+  const handleChangeAttribute = (e: any) => {};
+  const handleClear = () => {
+    console.log("aa")
+  }
   const handleDisplayColorTable = () => {
-    setDisplayColorTable(true)
-}
+    setDisplayColorTable(true);
+  };
   return (
     <>
       <canvas
@@ -66,6 +69,17 @@ function Board() {
           displayColorTabel={displayColorTabel}
           handleDisplayColorTable={handleDisplayColorTable}
         />
+      </div>
+      <div className="fixed flex justify-center top-86% left-39%">
+        <ToolBoard
+          setPen={(e : any) => {
+            setOption({ ...option, pen: e });
+          }}
+          type={option.pen}
+        />
+        <button onClick={handleClear}>
+          <Delete />
+        </button>
       </div>
     </>
   );

@@ -1,10 +1,11 @@
 import React from "react";
 import ToolBoardCheckBox from "../components/ToolBoardCheckBox";
-import IconColor from "../svg/coloricon.svg";
-import SizeL from "../svg/sizeL.svg";
-import SizeM from "../svg/sizeM.svg";
-import SizeS from "../svg/sizeS.svg";
+import { ReactComponent as IconColor } from "../icon/coloricon.svg";
+import { ReactComponent as SizeL } from "../icon/sizeL.svg";
+import { ReactComponent as SizeM } from "../icon/sizeM.svg";
+import { ReactComponent as SizeS } from "../icon/sizeS.svg";
 
+declare module "*.svg";
 interface ParamType {
   strokeWidth: number;
   color: string;
@@ -21,15 +22,15 @@ function StyleColor(props: ParamType) {
 
   const listSize = [
     {
-      icon: SizeS,
+      icon: <SizeS />,
       size: 4,
     },
     {
-      icon: SizeM,
+      icon: <SizeM />,
       size: 6,
     },
     {
-      icon: SizeL,
+      icon: <SizeL />,
       size: 10,
     },
   ];
@@ -50,7 +51,7 @@ function StyleColor(props: ParamType) {
   const listColorMap = listColor.map((e) => {
     return (
       <ToolBoardCheckBox
-        icon={e}
+        icon={<IconColor stroke={e} />}
         key={e}
         value={e}
         name={"stroke"}
@@ -69,13 +70,13 @@ function StyleColor(props: ParamType) {
       <div className=" flex m-2 justify-around">
         <p>Styles</p>
         <div>
-          <img src={IconColor}/>
+          <IconColor stroke={props.color} />
         </div>
       </div>
       {props.displayColorTabel ? (
         <div>
-          <div className="flex relative top-3 right-9 w-32 border-2 rounded-lg p-1">
-            <span>Color</span>
+          <div className="flex relative top-3 right-14 w-36 border-2 rounded-lg p-1">
+            <span className=" mr-3">Color</span>
             <div
               className="flex flex-wrap h-16 justify-around"
               onChange={handleChangeAttribute}
@@ -83,10 +84,10 @@ function StyleColor(props: ParamType) {
               {listColorMap}
             </div>
           </div>
-          <div className="flex relative top-3 right-9 w-32 border-2 rounded-lg p-1">
-            <span>Size</span>
+          <div className="flex relative top-3 right-14 w-36 border-2 rounded-lg p-1">
+            <span className="mr-5">Size</span>
             <div
-              className="flex flex-wrap h-6 justify-around"
+              className="flex flex-wrap h-6 justify-between"
               onChange={handleChangeAttribute}
             >
               {listSizeMap}
