@@ -14,7 +14,7 @@ interface ParamType {
   setAttribute: any;
 }
 function StyleColor(props: ParamType) {
-  const handleChangeAttribute = (e: any) => {
+  const handleChangeAttribute = (e: React.ChangeEvent<HTMLInputElement>) => {
     props.setAttribute(e.target);
   };
 
@@ -42,8 +42,12 @@ function StyleColor(props: ParamType) {
         key={e.size}
         value={e.size}
         name={"strokeWidth"}
-        selected={" bg-blue-400"}
-        hover={"hover:bg-blue-200"}
+        selected={
+          "bg-cyan-200 rounded-xl text-white relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+        }
+        hover={
+          "hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+        }
         checked={props.strokeWidth === e.size}
       />
     );
@@ -55,8 +59,12 @@ function StyleColor(props: ParamType) {
         key={e}
         value={e}
         name={"stroke"}
-        selected={" bg-blue-400"}
-        hover={"hover:bg-blue-200"}
+        selected={
+          "bg-cyan-200 rounded-xl relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+        }
+        hover={
+          "hover:bg-#e5e7eb rounded-xl relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+        }
         checked={props.color === e}
       />
     );
@@ -64,30 +72,30 @@ function StyleColor(props: ParamType) {
 
   return (
     <div
-      className="w-24 h-11 m-2 border-2 rounded-lg"
+      className="w-24 h-11 m-2 border-2 rounded-lg "
       onClick={props.handleDisplayColorTable}
     >
-      <div className=" flex m-2 justify-around">
+      <div className="flex m-2 justify-around ">
         <p>Styles</p>
         <div>
           <IconColor stroke={props.color} />
         </div>
       </div>
       {props.displayColorTabel ? (
-        <div>
-          <div className="flex relative top-3 right-14 w-36 border-2 rounded-lg p-1">
-            <span className=" mr-3">Color</span>
+        <div className=" absolute top-14 w-52 right-6% border-2 rounded-lg p-1">
+          <div className="flex justify-around">
+            <span className="mt-1">Color</span>
             <div
-              className="flex flex-wrap h-16 justify-around"
+              className="grid grid-cols-3 gap-0 mr-2 ml-2"
               onChange={handleChangeAttribute}
             >
               {listColorMap}
             </div>
           </div>
-          <div className="flex relative top-3 right-14 w-36 border-2 rounded-lg p-1">
-            <span className="mr-5">Size</span>
+          <div className="flex justify-around  ml-1 mr-1">
+            <span className="mt-2">Size</span>
             <div
-              className="flex flex-wrap h-6 justify-between"
+              className="grid grid-cols-3 gap-0"
               onChange={handleChangeAttribute}
             >
               {listSizeMap}

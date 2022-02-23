@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StyleColor from "../components/StyleColor";
 import ToolBoard from "../components/ToolBoard";
-import { ReactComponent as Delete } from "../icon/delete.svg"
+import { ReactComponent as Delete } from "../icon/delete.svg";
 declare var window: any;
 
 function Board() {
@@ -46,21 +46,16 @@ function Board() {
       };
     }
   }, [socket]);
-  const handleChangeAttribute = (e: any) => {};
+  const handleChangeAttribute = (e: React.ChangeEvent<HTMLInputElement>) => {};
   const handleClear = () => {
-    console.log("aa")
-  }
+    console.log("aa");
+  };
   const handleDisplayColorTable = () => {
     setDisplayColorTable(true);
   };
   return (
     <>
-      <canvas
-        id="board"
-        width={size.width}
-        height={size.height}
-        className=" border-2 border-black"
-      ></canvas>
+      <canvas id="board" width={size.width} height={size.height}></canvas>
       <div className="fixed right-0 top-0">
         <StyleColor
           setAttribute={handleChangeAttribute}
@@ -70,10 +65,10 @@ function Board() {
           handleDisplayColorTable={handleDisplayColorTable}
         />
       </div>
-      <div className="fixed flex justify-center top-86% left-39%">
+      <div className="fixed flex justify-center bottom-3 w-full">
         <ToolBoard
-          setPen={(e : any) => {
-            setOption({ ...option, pen: e });
+          setPen={(valueOption: string) => {
+            setOption({ ...option, pen: valueOption });
           }}
           type={option.pen}
         />
