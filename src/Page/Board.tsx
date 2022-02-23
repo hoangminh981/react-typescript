@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import StyleColor from "../components/StyleColor";
-import ToolBoard from "../components/ToolBoard";
+import StyleColor from "../components/Tool/StyleColor";
+import ToolBoard from "../components/Tool/ToolBoard";
 import { ReactComponent as Delete } from "../icon/delete.svg";
 declare var window: any;
 
@@ -55,6 +55,9 @@ function Board() {
   };
   return (
     <>
+      <div className=" absolute h-24 w-36 border-2 rounded-tr-full rounded-bl-full top-12">
+        <div className=" relative w-full top-8 text-center">Room {id}</div>
+      </div>
       <canvas id="board" width={size.width} height={size.height}></canvas>
       <div className="fixed right-0 top-0">
         <StyleColor
@@ -72,7 +75,10 @@ function Board() {
           }}
           type={option.pen}
         />
-        <button onClick={handleClear}>
+        <button
+          className="transform hover:bg-#e5e7eb rounded-xl  relative m-0 p-3 flex align-middle justify-center border-2 border-white transition duration-300 hover:scale-125"
+          onClick={handleClear}
+        >
           <Delete />
         </button>
       </div>

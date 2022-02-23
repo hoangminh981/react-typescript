@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ReactComponent as Mouse } from "../icon/mouse.svg";
-import { ReactComponent as Pencil } from "../icon/pencil.svg";
-import { ReactComponent as Eraser } from "../icon/eraser.svg";
-import { ReactComponent as Rectangle } from "../icon/rectangle.svg";
-import { ReactComponent as Cycle } from "../icon/cycle.svg";
-import { ReactComponent as Line } from "../icon/line.svg";
+import { ReactComponent as Mouse } from "../../icon/mouse.svg";
+import { ReactComponent as Pencil } from "../../icon/pencil.svg";
+import { ReactComponent as Eraser } from "../../icon/eraser.svg";
+import { ReactComponent as Rectangle } from "../../icon/rectangle.svg";
+import { ReactComponent as Cycle } from "../../icon/cycle.svg";
+import { ReactComponent as Line } from "../../icon/line.svg";
 import ToolBoardCheckBox from "./ToolBoardCheckBox";
 
 interface ParamTypeToolBoard {
@@ -72,7 +72,9 @@ export default function ToolBoard(props: ParamTypeToolBoard) {
     return (
       <ToolBoardCheckBox
         selected={"bg-blue-400 text-white w-full h-full rounded-lg p-2"}
-        hover={"hover:text-blue-200 w-full h-full rounded-lg p-2"}
+        hover={
+          "transform w-full h-full hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-full h-full border-4 border-white transition duration-300 hover:scale-125"
+        }
         key={item.type}
         styles="w-9 h-9 mr-1 ml-1 mt-0.125"
         value={item.type}
@@ -86,7 +88,9 @@ export default function ToolBoard(props: ParamTypeToolBoard) {
     return (
       <ToolBoardCheckBox
         selected={"bg-blue-400 text-white w-full h-full rounded-lg p-2"}
-        hover={"hover:text-blue-200 w-full h-full rounded-lg p-2"}
+        hover={
+          "transform w-full h-full hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-full h-full border-4 border-white transition duration-300 hover:scale-125"
+        }
         key={item.type}
         styles="w-9 h-9 mr-1 ml-1 mt-0.125"
         value={item.type}

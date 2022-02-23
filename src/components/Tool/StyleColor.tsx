@@ -1,9 +1,9 @@
 import React from "react";
-import ToolBoardCheckBox from "../components/ToolBoardCheckBox";
-import { ReactComponent as IconColor } from "../icon/coloricon.svg";
-import { ReactComponent as SizeL } from "../icon/sizeL.svg";
-import { ReactComponent as SizeM } from "../icon/sizeM.svg";
-import { ReactComponent as SizeS } from "../icon/sizeS.svg";
+import ToolBoardCheckBox from "./ToolBoardCheckBox";
+import { ReactComponent as IconColor } from "../../icon/coloricon.svg";
+import { ReactComponent as SizeL } from "../../icon/sizeL.svg";
+import { ReactComponent as SizeM } from "../../icon/sizeM.svg";
+import { ReactComponent as SizeS } from "../../icon/sizeS.svg";
 
 declare module "*.svg";
 interface ParamType {
@@ -46,7 +46,7 @@ function StyleColor(props: ParamType) {
           "bg-cyan-200 rounded-xl text-white relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
         }
         hover={
-          "hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+          "transform h-10 w-10 hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white transition duration-300 hover:scale-125"
         }
         checked={props.strokeWidth === e.size}
       />
@@ -63,7 +63,7 @@ function StyleColor(props: ParamType) {
           "bg-cyan-200 rounded-xl relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
         }
         hover={
-          "hover:bg-#e5e7eb rounded-xl relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white"
+          "transform h-10 w-10 hover:bg-#e5e7eb rounded-xl  relative m-0 p-1 flex align-middle justify-center w-10 h-10 border-4 border-white transition duration-300 hover:scale-125"
         }
         checked={props.color === e}
       />
