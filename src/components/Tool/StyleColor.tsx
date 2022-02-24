@@ -9,9 +9,9 @@ declare module "*.svg";
 interface ParamType {
   strokeWidth: number;
   color: string;
-  handleDisplayColorTable: any;
+  handleDisplayColorTable: () => void;
   displayColorTabel: boolean;
-  setAttribute: any;
+  setAttribute: (value : any) => void;
 }
 function StyleColor(props: ParamType) {
   const handleChangeAttribute = (e: React.ChangeEvent<HTMLInputElement>) => {
