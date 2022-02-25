@@ -18,7 +18,25 @@ import {
 declare var window: any;
 
 type event = React.ChangeEvent<HTMLInputElement>;
-
+type messageCreateObject = {
+  pointer: { x: number; y: number };
+  option: {
+    id: string;
+    stroke: string;
+    strokeWidth: number;
+    fill: "";
+    type?: string;
+    perPixelTargetFind: boolean;
+    left?: number;
+    top?: number;
+    width?: number;
+    height?: number;
+  };
+};
+type messageHandleDraw = {
+  event: string;
+  message: any;
+};
 function Board() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [option, setOption] = useState({
@@ -33,6 +51,8 @@ function Board() {
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  const [objectDraw, setObjectDraw] = useState<any>(null);
+  const [coordinate, setCoordinate] = useState<any>(null);
   const { id } = useParams();
   useEffect(() => {
     const canvasElement = new window.fabric.Canvas("board");
@@ -40,6 +60,7 @@ function Board() {
     const onSocket = new WebSocket(
       `wss://draw-realtime-socket.herokuapp.com/${id}`
     );
+    
     setSocket(onSocket);
   }, []);
 
@@ -56,73 +77,154 @@ function Board() {
       socket.onmessage = (e) => {
         let dataFromServer = JSON.parse(e.data);
         console.log(dataFromServer);
+        handleDraw(dataFromServer);
       };
     }
-  }, [canvas]);
+  }, [canvas,objectDraw,coordinate]);
   const handleDisplayColorTable = () => {
     setDisplayColorTable(true);
   };
   const createObject = (event: event) => {
     let pointer = canvas.getPointer(event);
-    switch (option.pen) {
-      case "line":
-        return {
-          coordinate: [pointer.x, pointer.y, pointer.x, pointer.y],
-          option: {
-            id: uuidv4(),
-            type: "line",
-            stroke: option.color,
-            strokeWidth: option.strokeWidth,
-            perPixelTargetFind: true,
-          },
-        };
-      case "rectag":
-        return {
-          pointer: pointer,
-          option: {
-            id: uuidv4(),
-            left: pointer.x,
-            top: pointer.y,
-            width: pointer.x - pointer.x,
-            height: pointer.y - pointer.y,
-            stroke: option.color,
-            strokeWidth: option.strokeWidth,
-            fill: "",
-            type: "rectag",
-            perPixelTargetFind: true,
-          },
-        };
-      case "cycle":
-        return {
-          pointer: pointer,
-          option: {
-            id: uuidv4(),
-            left: pointer.x,
-            top: pointer.y,
-            radius: 1,
-            originX: "center",
-            originY: "center",
-            stroke: option.color,
-            strokeWidth: option.strokeWidth,
-            fill: "",
-            type: "cycle",
-            perPixelTargetFind: true,
-          },
-        };
-      case "pencil":
-        return {
-          pointer: pointer,
-          option: {
-            id: uuidv4(),
-            stroke: option.color,
-            strokeWidth: option.strokeWidth,
-            type: "pencil",
-            perPixelTargetFind: true,
-          },
-        };
-      default:
+    let message: messageCreateObject = {
+      pointer: pointer,
+      option: {
+        id: uuidv4(),
+        left: pointer.x,
+        top: pointer.y,
+        width: pointer.x - pointer.x,
+        height: pointer.y - pointer.y,
+        stroke: option.color,
+        strokeWidth: option.strokeWidth,
+        fill: "",
+        type: option.pen,
+        perPixelTargetFind: true,
+      },
+    };
+    return message;
+  };
+  const handleDraw = (message: messageHandleDraw) => {
+    const objectInCanvas = canvas.getObjects();
+    switch (message.event) {
+      case "createObject":
+        let objectDrawing;
+        switch (message["message"]["option"].type) {
+          case "line":
+            objectDrawing = new window.fabric.Line(
+              [
+                message["message"]["pointer"].x,
+                message["message"]["pointer"].y,
+                message["message"]["pointer"].x,
+                message["message"]["pointer"].y,
+              ],
+              message["message"]["option"]
+            );
+            break;
+          case "rectag":
+            objectDrawing = new window.fabric.Rect(
+              message["message"]["option"]
+            );
+            break;
+          case "cycle":
+            objectDrawing = new window.fabric.Circle(
+              message["message"]["option"]
+            );
+            break;
+          case "pencil":
+            objectDrawing = new window.fabric.Polyline(
+              [
+                {
+                  x: message["message"]["pointer"].x,
+                  y: message["message"]["pointer"].y,
+                },
+              ],
+              { ...message["message"]["option"], fill: "transparent" }
+            );
+            break;
+        }
+        if (objectDrawing) {
+          setObjectDraw(objectDraw);
+          setCoordinate(message["message"]["pointer"]);
+          canvas.add(objectDrawing);
+        }
+        break;
+      case "setCoordinateObject":
+        if (objectDraw) {
+          switch (message["message"].type) {
+            case "line":
+              objectDraw.set({
+                x2: message["message"]["pointer"].x,
+                y2: message["message"]["pointer"].y,
+              });
+              break;
+            case "rectag":
+              if (coordinate.x > message["message"]["pointer"].x) {
+                objectDraw.set({
+                  left: Math.abs(message["message"]["pointer"].x),
+                });
+              }
+              if (coordinate.y > message["message"]["pointer"].y) {
+                objectDraw.set({
+                  top: Math.abs(message["message"]["pointer"].y),
+                });
+              }
+              objectDraw.set({
+                width: Math.abs(coordinate.x - message["message"]["pointer"].x),
+              });
+              objectDraw.set({
+                height: Math.abs(
+                  coordinate.y - message["message"]["pointer"].y
+                ),
+              });
+              break;
+            case "cycle":
+              if (coordinate.x > message["message"]["pointer"].x) {
+                objectDraw.set({
+                  left: Math.abs(message["message"]["pointer"].x),
+                });
+              }
+              if (coordinate.y > message["message"]["pointer"].y) {
+                objectDraw.set({
+                  top: Math.abs(message["message"]["pointer"].y),
+                });
+              }
+              objectDraw.set({
+                rx:
+                  Math.abs(coordinate.x - message["message"]["pointer"].x) / 2,
+              });
+              objectDraw.set({
+                ry:
+                  Math.abs(coordinate.y - message["message"]["pointer"].y) / 2,
+              });
+              break;
+            case "pencil":
+              const dim = objectDraw._calcDimensions();
+              objectDraw.points.push(
+                new window.fabric.Point(
+                  message["message"]["pointer"].x,
+                  message["message"]["pointer"].y
+                )
+              );
+              objectDraw.set({
+                left: dim.left,
+                top: dim.top,
+                width: dim.width,
+                height: dim.height,
+                dirty: true,
+                pathOffset: new window.fabric.Point(
+                  dim.left + dim.width / 2,
+                  dim.top + dim.height / 2
+                ),
+              });
+              break;
+          }
+        }
         break;
     }
+    if (objectDraw) {
+      objectDraw.setCoords();
+    }
+    canvas.renderAll();
   };
   const handleMouseDown = (e: event) => {
     const object = createObject(e);
@@ -134,7 +236,7 @@ function Board() {
       default:
         let message = {
           event: "createObject",
-          object: object,
+          message: object,
         };
         if (socket) {
           socket.send(JSON.stringify(message));
